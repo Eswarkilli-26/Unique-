@@ -1,0 +1,70 @@
+import { useState } from "react"; import { Card, CardContent } from "@/components/ui/card"; import { Button } from "@/components/ui/button"; import { Input } from "@/components/ui/input"; import { motion } from "framer-motion";
+
+export default function StudyBuddyApp() { const [topics, setTopics] = useState([ { id: 1, subject: "Python Basics", status: "In Progress" }, { id: 2, subject: "HTML & CSS", status: "Pending" }, { id: 3, subject: "JavaScript", status: "Pending" }, ]);
+
+const [newTopic, setNewTopic] = useState("");
+
+const addTopic = () => { if (newTopic.trim() !== "") { setTopics([ ...topics, { id: Date.now(), subject: newTopic, status: "Pending" }, ]); setNewTopic(""); } };
+
+return ( <div className="min-h-screen bg-gray-100 p-6"> <motion.h1 initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="text-3xl font-bold text-center text-orange-600 mb-6" > 📚 StudyBuddy – ChatGPT Preparation Tracker </motion.h1>
+
+<div className="flex justify-center gap-2 mb-6">
+    <Input
+      placeholder="Add new topic..."
+      value={newTopic}
+      onChange={(e) => setNewTopic(e.target.value)}
+    />
+    <Button onClick={addTopic}>Add</Button>
+  </div>
+
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    {topics.map((topic) => (
+      <motion.div
+        key={topic.id}
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.4 }}
+      >
+        <Card className="shadow-lg rounded-2xl">
+          <CardContent className="p-4">
+            <h3 className="text-xl font-semibold text-gray-800">
+              {topic.subject}
+            </h3>
+            <p className="text-sm text-gray-500">Status: {topic.status}</p>
+            <div className="mt-3 flex gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() =>
+                  setTopics(
+                    topics.map((t) =>
+                      t.id === topic.id ? { ...t, status: "In Progress" } : t
+                    )
+                  )
+                }
+              >
+                Start
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() =>
+                  setTopics(
+                    topics.map((t) =>
+                      t.id === topic.id ? { ...t, status: "Completed" } : t
+                    )
+                  )
+                }
+              >
+                Complete
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
+    ))}
+  </div>
+</div>
+
+); }
+
